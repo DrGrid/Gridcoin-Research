@@ -49,7 +49,7 @@ std::string GetTxProject(uint256 hash, int& out_blocknumber, int& out_blocktype,
     uint256 hashBlock = 0;
 	std::string error_code = "";
 
-    
+
     if (!GetTransaction(hash, tx, hashBlock))
 	{
 		return "";
@@ -60,24 +60,24 @@ std::string GetTxProject(uint256 hash, int& out_blocknumber, int& out_blocktype,
 	CBlockIndex* pindexPrev = NULL;
 	CBlock block;
     map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.find(hashBlock);
-    if (mi == mapBlockIndex.end())   
+    if (mi == mapBlockIndex.end())
 	{
 			return ""; //not found
 	}
     pindexPrev = (*mi).second;
-  	if (!block.ReadFromDisk(pindexPrev)) 
+  	if (!block.ReadFromDisk(pindexPrev))
 	{
 			return ""; //failed to read
 	}
 	out_blocktype = block.nVersion;
 	out_blocknumber = pindexPrev->nHeight;
-	//Deserialize 
-	
+	//Deserialize
+
     MiningCPID bb = DeserializeBoincBlock(block.vtx[0].hashBoinc);
-	
+
 	out_rac = bb.rac;
 	return bb.projectname;
-	
+
 }
 
 Value downloadblocks(const Array& params, bool fHelp)
@@ -140,7 +140,7 @@ Value restart(const Array& params, bool fHelp)
         }
         else if (upgrader.downloadSuccess())
         {
-            upgrader.launcher(UPGRADER, upgrader.getTarget());       
+            upgrader.launcher(UPGRADER, upgrader.getTarget());
             return "Shutting down...";
         }
         Object result;
@@ -179,7 +179,7 @@ Value upgrade(const Array& params, bool fHelp)
             "upgrade \n"
             "Upgrades client to the latest version.\n"
             "{}");
-		
+
 
 		int target;
 		 #ifdef QT_GUI
@@ -187,7 +187,7 @@ Value upgrade(const Array& params, bool fHelp)
          #else
          target = DAEMON;
          #endif
- 
+
          if (!upgrader.setTarget(target))
          {
              throw runtime_error("Upgrader already busy\n");
@@ -200,7 +200,7 @@ Value upgrade(const Array& params, bool fHelp)
               QMetaObject::invokeMethod(&checker, "check", Qt::QueuedConnection);
              #endif
              return "Initiated download of client";
-        }        
+        }
 
 }
 
@@ -256,11 +256,11 @@ void TxToJSON(const CTransaction& tx, const uint256 hashBlock, Object& entry)
 
         if (tx.IsCoinBase())
             in.push_back(Pair("coinbase", HexStr(txin.scriptSig.begin(), txin.scriptSig.end())));
-		
+
         else
         {
             in.push_back(Pair("txid", txin.prevout.hash.GetHex()));
-		
+
             in.push_back(Pair("vout", (int64_t)txin.prevout.n));
             Object o;
             o.push_back(Pair("asm", txin.scriptSig.ToString()));
@@ -391,6 +391,7 @@ Value listunspent(const Array& params, bool fHelp)
     Array results;
     vector<COutput> vecOutputs;
     pwalletMain->AvailableCoins(vecOutputs, false);
+    //Push the different output types into the array.
     BOOST_FOREACH(const COutput& out, vecOutputs)
     {
         if (out.nDepth < nMinDepth || out.nDepth > nMaxDepth)
@@ -419,6 +420,17 @@ Value listunspent(const Array& params, bool fHelp)
                 entry.push_back(Pair("account", pwalletMain->mapAddressBook[address]));
         }
         entry.push_back(Pair("scriptPubKey", HexStr(pk.begin(), pk.end())));
+        if (pk.IsPayToScriptHash())
+        {
+            CTxDestination address;
+            if (ExtractDestination(pk, address))
+            {
+                const CScriptID& hash = boost::get<const CScriptID&>(address);
+                CScript redeemScript;
+                if (pwalletMain->GetCScript(hash, redeemScript))
+                    entry.push_back(Pair("redeemScript", HexStr(redeemScript.begin(), redeemScript.end())));
+            }
+        }
         entry.push_back(Pair("amount",ValueFromAmount(nValue)));
         entry.push_back(Pair("confirmations",out.nDepth));
         results.push_back(entry);
@@ -546,7 +558,7 @@ Value signrawtransaction(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 4)
         throw runtime_error(
-            "signrawtransaction <hex string> [{\"txid\":txid,\"vout\":n,\"scriptPubKey\":hex},...] [<privatekey1>,...] [sighashtype=\"ALL\"]\n"
+            "signrawtransaction <hex string> [{\"txid\":txid,\"vout\":n,\"scriptPubKey\":hex,\"redeemScript\":hex},...] [<privatekey1>,...] [sighashtype=\"ALL\"]\n"
             "Sign inputs for raw transaction (serialized, hex-encoded).\n"
             "Second optional argument (may be null) is an array of previous transaction outputs that\n"
             "this transaction depends on but may not yet be in the blockchain.\n"
@@ -606,7 +618,28 @@ Value signrawtransaction(const Array& params, bool fHelp)
                 mapPrevOut[txin.prevout] = mapPrevTx[prevHash].second.vout[txin.prevout.n].scriptPubKey;
         }
     }
-
+    //Add Keys into a temporary storage.
+    bool fGivenKeys = false;
+    CBasicKeyStore tempKeystore;
+    if (params.size() > 2 && params[2].type() != null_type)
+    {
+        fGivenKeys = true;
+        Array keys = params[2].get_array();
+        BOOST_FOREACH(Value k, keys)
+        {
+            CBitcoinSecret vchSecret;
+            bool fGood = vchSecret.SetString(k.get_str());
+            if (!fGood)
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid private key");
+            CKey key;
+            bool fCompressed;
+            CSecret secret = vchSecret.GetSecret(fCompressed);
+            key.SetSecret(secret, fCompressed);
+            tempKeystore.AddKey(key);
+        }
+    }
+    else
+        EnsureWalletIsUnlocked();
     // Add previous txouts given in the RPC call:
     if (params.size() > 1 && params[1].type() != null_type)
     {
@@ -618,7 +651,7 @@ Value signrawtransaction(const Array& params, bool fHelp)
 
             Object prevOut = p.get_obj();
 
-            RPCTypeCheck(prevOut, map_list_of("txid", str_type)("vout", int_type)("scriptPubKey", str_type));
+            RPCTypeCheck(prevOut, map_list_of("txid", str_type)("vout", int_type)("scriptPubKey", str_type)("redeemScript",str_type));
 
             string txidHex = find_value(prevOut, "txid").get_str();
             if (!IsHex(txidHex))
@@ -650,30 +683,15 @@ Value signrawtransaction(const Array& params, bool fHelp)
             }
             else
                 mapPrevOut[outpoint] = scriptPubKey;
+            Value v = find_value(prevOut, "redeemScript");
+            if (fGivenKeys && scriptPubKey.IsPayToScriptHash() && !(v == Value::null))
+            {
+                vector<unsigned char> rsData(ParseHexV(v, "redeemScript"));
+                CScript redeemScript(rsData.begin(), rsData.end());
+                tempKeystore.AddCScript(redeemScript);
+            }
         }
     }
-
-    bool fGivenKeys = false;
-    CBasicKeyStore tempKeystore;
-    if (params.size() > 2 && params[2].type() != null_type)
-    {
-        fGivenKeys = true;
-        Array keys = params[2].get_array();
-        BOOST_FOREACH(Value k, keys)
-        {
-            CBitcoinSecret vchSecret;
-            bool fGood = vchSecret.SetString(k.get_str());
-            if (!fGood)
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY,"Invalid private key");
-            CKey key;
-            bool fCompressed;
-            CSecret secret = vchSecret.GetSecret(fCompressed);
-            key.SetSecret(secret, fCompressed);
-            tempKeystore.AddKey(key);
-        }
-    }
-    else
-        EnsureWalletIsUnlocked();
 
     const CKeyStore& keystore = (fGivenKeys ? tempKeystore : *pwalletMain);
 
