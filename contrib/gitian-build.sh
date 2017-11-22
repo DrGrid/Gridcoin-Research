@@ -6,7 +6,6 @@
 sign=false
 verify=false
 build=true
-setupenv=false
 
 # Systems to build
 linux=true
