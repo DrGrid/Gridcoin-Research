@@ -11,12 +11,11 @@ setupenv=false
 # Systems to build
 linux=true
 windows=true
-#osx=true
 osx=false
 
 # Other Basic variables
-SIGNER=TheCharlatan
-VERSION=3.5.9.2
+SIGNER=
+VERSION=
 commit=false
 url=https://github.com/TheCharlatan/Gridcoin-Research/
 proc=2
@@ -225,7 +224,7 @@ fi
 # Add a "v" if no -c
 if [[ $commit = false ]]
 then
-	COMMIT="v${VERSION}"
+	COMMIT="${VERSION}"
 fi
 echo ${COMMIT}
 
