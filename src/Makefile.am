@@ -17,16 +17,16 @@ LIBGRIDCOINQT=qt/libgridcoinqt.a
 
 # Make is not made aware of per-object dependencies to avoid limiting building parallelization
 # But to build the less dependent modules first, we manually select their order here:
-EXTRA_LIBRARIES += $(LIBGRIDCOIN_UTIL) 
+#EXTRA_LIBRARIES += $(LIBGRIDCOIN_UTIL) 
 
 bin_PROGRAMS =
 noinst_PROGRAMS =
 TESTS =
 BENCHMARKS =
 
-if BUILD_GRIDCOINRESEARCHD
-    bin_PROGRAMS += gridcoinresearchd
-endif
+#if BUILD_GRIDCOINRESEARCHD
+#    bin_PROGRAMS += gridcoinresearchd
+#endif
 
 
 .PHONY: FORCE check-symbols check-security
@@ -230,10 +230,10 @@ if ENABLE_QT
 include Makefile.qt.include
 endif
 
-if ENABLE_TESTS
-include Makefile.test.include
-endif
+#if ENABLE_TESTS
+#include Makefile.test.include
+#endif
 
-if ENABLE_QT_TESTS
-include Makefile.qttest.include
-endif
+#if ENABLE_QT_TESTS
+#include Makefile.qttest.include
+#endif

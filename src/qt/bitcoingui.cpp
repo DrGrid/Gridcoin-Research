@@ -1750,7 +1750,7 @@ void BitcoinGUI::timerfire()
                 NewUserWizard();
             }
 #ifdef WIN32
-            if (!bGlobalcomInitialized) return;
+            //if (!bGlobalcomInitialized) return;
 
             nRegVersion = globalcom->dynamicCall("Version()").toInt();
             sRegVer = boost::lexical_cast<std::string>(nRegVersion);
