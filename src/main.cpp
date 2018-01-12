@@ -178,7 +178,6 @@ CBigNum bnProofOfWorkLimitTestNet(~uint256(0) >> 16);
 
 //Gridcoin Minimum Stake Age (16 Hours)
 unsigned int nStakeMinAge = 16 * 60 * 60; // 16 hours
-unsigned int nStakeMaxAge = -1; // unlimited
 unsigned int nModifierInterval = 10 * 60; // time to elapse before new modifier is computed
 bool bOPReturnEnabled = true;
 
