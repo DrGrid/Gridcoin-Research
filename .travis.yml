@@ -26,7 +26,7 @@ env:
 # Win32
     - HOST=i686-w64-mingw32 DPKG_ADD_ARCH="i386" DEP_OPTS="NO_QT=1" PACKAGES="python3 nsis g++-mingw-w64-i686 wine1.6" RUN_TESTS=false GOAL="" GRIDCOIN_CONFIG="--enable-reduce-exports"
 # Qt5 & system libs
-    - HOST=x86_64-unknown-linux-gnu DEP_OPTS="QT_59=1" NEED_XVFB=1 RUN_TESTS=true GOAL="install" GRIDCOIN_CONFIG="--enable-reduce-exports --enable-qt59" 
+    - HOST=x86_64-unknown-linux-gnu DEP_OPTS="QT_59=1" PACKAGES="xvfb" NEED_XVFB=1 RUN_TESTS=true GOAL="install" GRIDCOIN_CONFIG="--enable-reduce-exports --enable-qt59" 
 # 32-bit + dash
     - HOST=i686-pc-linux-gnu PACKAGES="g++-multilib" DEP_OPTS="NO_QT=1" RUN_TESTS=false GOAL="install" GRIDCOIN_CONFIG="--enable-glibc-back-compat --enable-reduce-exports LDFLAGS=-static-libstdc++" USE_SHELL="/bin/dash"
 # Win64 - note that windows still builds with Qt5.7.1 since Travis does not have a modern mingw version available
