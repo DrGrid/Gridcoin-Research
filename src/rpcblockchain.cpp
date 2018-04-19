@@ -25,6 +25,8 @@
 #include <fstream>
 #include <algorithm>
 
+#define _USE_MATH_DEFINES
+#include <cmath>
 
 bool TallyResearchAverages_v9(CBlockIndex* index);
 using namespace json_spirit;
@@ -3999,29 +4001,37 @@ double ReturnVerifiedVotingBalance(std::string sXML, bool bCreatedAfterSecurityU
 
 double ReturnVerifiedVotingMagnitude(std::string sXML, bool bCreatedAfterSecurityUpgrade)
 {
-	double dLegacyMagnitude  = RoundFromString(ExtractXML(sXML,"<MAGNITUDE>","</MAGNITUDE>"),2);
-	if (!bCreatedAfterSecurityUpgrade) return dLegacyMagnitude;
+    double dLegacyMagnitude  = RoundFromString(ExtractXML(sXML,"<MAGNITUDE>","</MAGNITUDE>"),2);
+    if (!bCreatedAfterSecurityUpgrade) return dLegacyMagnitude;
 
-	std::string sMagXML = ExtractXML(sXML,"<PROVABLEMAGNITUDE>","</PROVABLEMAGNITUDE>");
-	std::string sMagnitude = ExtractXML(sMagXML,"<INNERMAGNITUDE>","</INNERMAGNITUDE>");
-	std::string sXmlSigned = ExtractXML(sMagXML,"<SIGNATURE>","</SIGNATURE>");
-	std::string sXmlBlockHash = ExtractXML(sMagXML,"<BLOCKHASH>","</BLOCKHASH>");
-	std::string sXmlCPID = ExtractXML(sMagXML,"<CPID>","</CPID>");
-	if (!sXmlBlockHash.empty() && !sMagnitude.empty() && !sXmlSigned.empty())
-	{
-		CBlockIndex* pblockindexMagnitude = mapBlockIndex[uint256(sXmlBlockHash)];
-		if (pblockindexMagnitude)
-		{
-				bool fResult = VerifyCPIDSignature(sXmlCPID, sXmlBlockHash, sXmlSigned);
-				bool fAudited = (RoundFromString(RoundToString(pblockindexMagnitude->nMagnitude,2),0)==RoundFromString(sMagnitude,0) && fResult);
-				if (fAudited) return (double)pblockindexMagnitude->nMagnitude;
-		}
-	}
-	return 0;
+    std::string sMagXML = ExtractXML(sXML,"<PROVABLEMAGNITUDE>","</PROVABLEMAGNITUDE>");
+    std::string sMagnitude = ExtractXML(sMagXML,"<INNERMAGNITUDE>","</INNERMAGNITUDE>");
+    std::string sXmlSigned = ExtractXML(sMagXML,"<SIGNATURE>","</SIGNATURE>");
+    std::string sXmlBlockHash = ExtractXML(sMagXML,"<BLOCKHASH>","</BLOCKHASH>");
+    std::string sXmlCPID = ExtractXML(sMagXML,"<CPID>","</CPID>");
+    double dMagnitude = atof(sMagnitude.c_str());
+    if (!sXmlBlockHash.empty() && !sMagnitude.empty() && !sXmlSigned.empty())
+    {
+        CBlockIndex* pblockindexMagnitude = mapBlockIndex[uint256(sXmlBlockHash)];
+        if (pblockindexMagnitude)
+        {
+            //first check if the superblock at height n has the same magnitude value
+            bool fResult = VerifyCPIDSignature(sXmlCPID, sXmlBlockHash, sXmlSigned);
+            bool fAudited = (RoundFromString(RoundToString(pblockindexMagnitude->nMagnitude,2),0)==RoundFromString(sMagnitude,0) && fResult);
+	    //then extrapolate the current magnitude from the superblock
+            if (fAudited)
+            {
+                unsigned long credit_half_life = 86400 * 7;
+                int64_t diff = GetTime() - pblockindexMagnitude->GetBlockTime();
+                double weight = exp(-diff * M_LN2/credit_half_life);
+                dMagnitude*= weight;
+                if (dMagnitude >= 1)
+                    return (double)pblockindexMagnitude->nMagnitude;
+            }
+        }
+    }
+    return 0;
 }
-
-
-
 
 Array GetJsonUnspentReport()
 {

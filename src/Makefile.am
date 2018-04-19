@@ -155,7 +155,7 @@ libgridcoin_util_a_SOURCES = $(GRIDCOIN_CORE_CPP) \
 	$(GRIDCOIN_JSON_H)
 
 if TARGET_WINDOWS
-libgridcoin_util_a_CXXFLAGS += -DUNICODE
+libgridcoin_util_a_CXXFLAGS += -DUNICODE -D_USE_MATH_DEFINES
 endif
 
 nodist_libgridcoin_util_a_SOURCES = $(srcdir)/obj/build.h
