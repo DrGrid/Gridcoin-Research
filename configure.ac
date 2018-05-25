@@ -976,7 +976,7 @@ dnl these are only used when qt is enabled
 BUILD_TEST_QT=""
 if test x$bitcoin_enable_qt != xno; then
   CPPFLAGS="$CPPFLAGS -DQT_GUI"
-  if test x$enable_qt59 != xno; then
+  if test x$bitcoin_cv_qt58 = xyes; then
     CPPFLAGS="$CPPFLAGS -DQT_CHARTS_LIB"
   fi
   dnl enable dbus support
