@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>948</width>
-    <height>559</height>
+    <height>666</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -114,14 +114,14 @@
             <property name="verticalSpacing">
              <number>12</number>
             </property>
-            <item row="0" column="0">
+            <item row="5" column="0">
              <widget class="QLabel" name="labelAvailable">
               <property name="text">
                <string>Available:</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
+            <item row="5" column="1">
              <widget class="QLabel" name="labelBalance">
               <property name="cursor">
                <cursorShape>IBeamCursor</cursorShape>
@@ -137,14 +137,14 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
+            <item row="6" column="0">
              <widget class="QLabel" name="label_10">
               <property name="text">
                <string>Stake</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
+            <item row="6" column="1">
              <widget class="QLabel" name="labelStake">
               <property name="cursor">
                <cursorShape>IBeamCursor</cursorShape>
@@ -160,14 +160,14 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
+            <item row="7" column="0">
              <widget class="QLabel" name="label_3">
               <property name="text">
                <string>Unconfirmed</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
+            <item row="7" column="1">
              <widget class="QLabel" name="labelUnconfirmed">
               <property name="cursor">
                <cursorShape>IBeamCursor</cursorShape>
@@ -183,14 +183,14 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
+            <item row="8" column="0">
              <widget class="QLabel" name="labelImmatureText">
               <property name="text">
                <string>Immature:</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
+            <item row="8" column="1">
              <widget class="QLabel" name="labelImmature">
               <property name="toolTip">
                <string>Total mined coins that have not yet matured.</string>
@@ -203,7 +203,7 @@
               </property>
              </widget>
             </item>
-            <item row="4" column="0" colspan="2">
+            <item row="9" column="0" colspan="2">
              <widget class="Line" name="line">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -222,20 +222,74 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="0">
+            <item row="10" column="0">
              <widget class="QLabel" name="labelTotalBalance">
               <property name="text">
                <string>Total:</string>
               </property>
              </widget>
             </item>
-            <item row="5" column="1">
+            <item row="10" column="1">
              <widget class="QLabel" name="labelTotal">
               <property name="toolTip">
                <string>Your current total balance</string>
               </property>
               <property name="text">
                <string notr="true">0</string>
+              </property>
+              <property name="textInteractionFlags">
+               <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0" colspan="2">
+             <widget class="QLabel" name="labelTitelDetails">
+              <property name="text">
+               <string>Wallet Details</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="Line" name="lineTitleDetails">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_16">
+              <property name="text">
+               <string>Status:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="labelStatus">
+              <property name="text">
+               <string notr="true"/>
+              </property>
+              <property name="textInteractionFlags">
+               <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_14">
+              <property name="text">
+               <string>Project:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLabel" name="labelProject">
+              <property name="text">
+               <string notr="true"/>
               </property>
               <property name="textInteractionFlags">
                <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -261,13 +315,6 @@
            </spacer>
           </item>
           <item>
-           <widget class="Line" name="line_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
            <layout class="QFormLayout" name="formLayout">
             <property name="fieldGrowthPolicy">
              <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
@@ -278,14 +325,14 @@
             <property name="verticalSpacing">
              <number>12</number>
             </property>
-            <item row="0" column="0">
+            <item row="2" column="0">
              <widget class="QLabel" name="label_2">
               <property name="text">
                <string>Blocks:</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
+            <item row="2" column="1">
              <widget class="QLabel" name="labelBlocks">
               <property name="text">
                <string notr="true"/>
@@ -295,14 +342,14 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
+            <item row="3" column="0">
              <widget class="QLabel" name="label_8">
               <property name="text">
                <string>Difficulty:</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
+            <item row="3" column="1">
              <widget class="QLabel" name="labelDifficulty">
               <property name="text">
                <string notr="true"/>
@@ -312,14 +359,14 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
+            <item row="4" column="0">
              <widget class="QLabel" name="label_11">
               <property name="text">
                <string>Net Weight:</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
+            <item row="4" column="1">
              <widget class="QLabel" name="labelNetWeight">
               <property name="text">
                <string notr="true"/>
@@ -329,42 +376,14 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
+            <item row="5" column="0">
              <widget class="QLabel" name="label_7">
               <property name="text">
                <string>Coin Weight:</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="label_13">
-              <property name="text">
-               <string>Magnitude:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="label_14">
-              <property name="text">
-               <string>Project:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="label_15">
-              <property name="text">
-               <string>CPID:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0">
-             <widget class="QLabel" name="label_16">
-              <property name="text">
-               <string>Status:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
+            <item row="5" column="1">
              <widget class="QLabel" name="labelCoinWeight">
               <property name="text">
                <string notr="true"/>
@@ -374,7 +393,14 @@
               </property>
              </widget>
             </item>
-            <item row="4" column="1">
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_13">
+              <property name="text">
+               <string>Magnitude:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
              <widget class="QLabel" name="labelMagnitude">
               <property name="text">
                <string notr="true"/>
@@ -384,17 +410,14 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="1">
-             <widget class="QLabel" name="labelProject">
+            <item row="8" column="0">
+             <widget class="QLabel" name="label_15">
               <property name="text">
-               <string notr="true"/>
-              </property>
-              <property name="textInteractionFlags">
-               <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+               <string>CPID:</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="1">
+            <item row="8" column="1">
              <widget class="QLabel" name="labelCpid">
               <property name="text">
                <string notr="true"/>
@@ -404,13 +427,23 @@
               </property>
              </widget>
             </item>
-            <item row="7" column="1">
-             <widget class="QLabel" name="labelStatus">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label">
               <property name="text">
-               <string notr="true"/>
+               <string>Network Status</string>
               </property>
-              <property name="textInteractionFlags">
-               <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="Line" name="line_2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
