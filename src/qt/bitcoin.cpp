@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
 {
     // Set default value to exit properly. Exit code 42 will trigger restart of the wallet.
     int currentExitCode = 0;
- 
+
     // Set global boolean to indicate intended presence of GUI to core.
     fQtActive = true;
 
@@ -179,6 +179,15 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 	//uint SEM_FAILCRITICALERRORS= 0x0001;
 	//uint SEM_NOGPFAULTERRORBOX = 0x0002;
+
+#if QT_VERSION > 0x050100
+    // Generate high-dpi pixmaps
+    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+#endif
+#if QT_VERSION >= 0x050600
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+
 #if defined(WIN32) && defined(QT_GUI)
 	SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX);
 #endif
