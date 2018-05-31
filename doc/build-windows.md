@@ -20,8 +20,8 @@ Compiling with Windows Subsystem For Linux
 
 With Windows 10, Microsoft has released a new feature named the [Windows
 Subsystem for Linux](https://msdn.microsoft.com/commandline/wsl/about). This
-feature allows you to run a bash shell directly on Windows in an Ubuntu-based
-environment. Within this environment you can cross compile for Windows without
+feature allows you to run a bash shell directly on Windows in an Ubuntu 18.04 "Bionic Beaver"
+based environment. Within this environment you can cross compile for Windows without
 the need for a separate Linux VM or server.
 
 This feature is not supported in versions of Windows prior to Windows 10 or on
@@ -55,7 +55,7 @@ installing the toolchain will be different.
 
 First, install the general dependencies:
 
-    sudo apt-get install build-essential libtool autotools-dev automake pkg-config bsdmainutils curl
+    sudo apt-get install build-essential libtool autotools-dev automake pkg-config bsdmainutils curl zlib1g-dev
 
 A host toolchain (`build-essential`) is necessary because some dependency
 packages (such as `protobuf`) need to build host utilities that are used in the
@@ -70,40 +70,6 @@ Common steps to install mingw32 cross compiler tool chain:
 
     sudo apt install g++-mingw-w64-x86-64
 
-Ubuntu Trusty 14.04:
-
-    No further steps required
-
-Ubuntu Xenial 16.04 and Windows Subsystem for Linux: 
-
-    sudo apt install software-properties-common
-    sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu zesty universe"
-    sudo apt update
-    sudo apt upgrade
-    sudo update-alternatives --config x86_64-w64-mingw32-g++ # Set the default mingw32 g++ compiler option to posix.
-
-Ubuntu Zesty 17.04:
-
-    sudo update-alternatives --config x86_64-w64-mingw32-g++ # Set the default mingw32 g++ compiler option to posix.
-
-Note that for WSL the Gridcoin source path MUST be somewhere in the default mount file system, for
-example /usr/src/Gridcoin-Research, AND not under /mnt/d/. If this is not the case the dependency autoconf scripts will fail.
-This means you cannot use a directory that located directly on the host Windows file system to perform the build.
-
-    cd /usr/src
-    sudo git clone https://github.com/gridcoin/Gridcoin-Research.git
-    sudo chmod -R a+rw Gridcoin-Research
-    PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g') # strip out problematic Windows %PATH% imported var
-    
-Then build using:
-
-    cd depends
-    make HOST=x86_64-w64-mingw32
-    cd ..
-    ./autogen.sh # not required when building from tarball
-    CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site ./configure --prefix=/
-    make
-
 Ubuntu Bionic Beaver 18.04:
 
     sudo update-alternatives --config x86_64-w64-mingw32-g++ # Set the default mingw32 g++ compiler option to posix.
@@ -113,10 +79,10 @@ Gridcoin Wallet with Qt5.9.4 and subsequently enable charting of vote results
 in the wallet. Follow these steps:
 
     cd depends
-    make HOST=x86_64-w64-mingw32 QT_59=1
+    make HOST=x86_64-w64-mingw32
     cd ..
     ./autogen.sh # not required when building from tarball
-    CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site ./configure --prefix=/ --enable-qt59
+    CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site ./configure --prefix=/
     make
 
 ## Building for 32-bit Windows
