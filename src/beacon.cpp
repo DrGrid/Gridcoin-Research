@@ -5,6 +5,9 @@
 #include "main.h"
 #include "appcache.h"
 #include "contract/contract.h"
+#include "wallet.h"
+#include "init.h" //for pwalletmain
+
 
 std::string RetrieveBeaconValueWithMaxAge(const std::string& cpid, int64_t iMaxSeconds);
 int64_t GetRSAWeightByCPIDWithRA(std::string cpid);
@@ -214,3 +217,17 @@ bool VerifyBeaconContractTx(const CTransaction& tx)
     // Passed checks
     return true;
 }
+
+bool CreateNewBeacon(std::vector<unsigned char> cpid)
+{
+    CScript scriptPubKey;
+    scriptPubKey = CScript() << OP_RETURN << cpid;
+    CWalletTx wtx;
+    int64_t nAmount = 0.01*COIN;
+    std::string strError = pwalletMain->SendMoney(scriptPubKey, nAmount, wtx);
+    if(!strError.empty())
+        return false;
+    return true;
+}
+
+

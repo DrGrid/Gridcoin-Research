@@ -282,6 +282,7 @@ static const CRPCCommand vRPCCommands[] =
     { "burn",                    &burn,                    false,  cat_wallet        },
     { "burn2",                   &burn2,                   false,  cat_wallet        },
     { "checkwallet",             &checkwallet,             false,  cat_wallet        },
+    { "createbeacon",            &createbeacon,            false,  cat_wallet        },
     { "createrawtransaction",    &createrawtransaction,    false,  cat_wallet        },
     { "decoderawtransaction",    &decoderawtransaction,    false,  cat_wallet        },
     { "decodescript",            &decodescript,            false,  cat_wallet        },
@@ -684,7 +685,7 @@ void StartRPCThreads()
         StartShutdown();
         return;
     }
-    
+
     rpc_worker_group = new boost::thread_group();
     for (int i = 0; i < GetArg("-rpcthreads", 4); i++)
         rpc_worker_group->create_thread(boost::bind(&asio::io_service::run, rpc_io_service));
@@ -702,7 +703,7 @@ void StopRPCThreads()
     rpc_io_service->stop();
     if (rpc_worker_group != NULL)
         rpc_worker_group->join_all();
-    
+
     delete rpc_worker_group;
     rpc_worker_group = NULL;
     delete rpc_ssl_context;

@@ -12,6 +12,7 @@
 #include "init.h"
 #include "base58.h"
 #include "backup.h"
+#include "beacon.h"
 #include "util.h"
 
 #include <univalue.h>
@@ -2310,3 +2311,24 @@ UniValue burn(const UniValue& params, bool fHelp)
 
     return wtx.GetHash().GetHex();
 }
+
+UniValue createbeacon(const UniValue& params, bool fHelp)
+{
+    if (fHelp || params.size() > 1)
+        throw runtime_error(
+                "createbeacon <cpid> [hex string]\n"
+                "\n"
+                "Requires more than 0.00000001 GRC in wallet\n"
+                + HelpRequiringPassphrase());
+
+    if (pwalletMain->IsLocked())
+        throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Error: Please enter the wallet passphrase with wallatpassphrase first.");
+    vector<unsigned char> data;
+    if (params[0].get_str().size() > 0)
+        data = ParseHex(params[1].get_str());
+    bool result = CreateNewBeacon(data);
+    UniValue oResult(UniValue::VOBJ);
+    oResult.pushKV("NewBeacon", result);
+    return oResult;
+}
+
