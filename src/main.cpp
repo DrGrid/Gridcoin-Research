@@ -1552,6 +1552,10 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx, bool* pfMissingInput
     if (!VerifyBeaconContractTx(tx))
         return tx.DoS(25, error("AcceptToMemoryPool : bad beacon contract in tx %s; rejected", tx.GetHash().ToString().c_str()));
 
+    // Verify beacon v2 contract in tx if found
+    if (!VerifyBeaconV2Tx(tx))
+        return tx.DoS(25, error("AcceptToMemoryPool : bad beacon v2 contract in tx %s; rejected", tx.GetHash().ToString().c_str()));
+
     // Coinbase is only valid in a block, not as a loose transaction
     if (tx.IsCoinBase())
         return tx.DoS(100, error("AcceptToMemoryPool : coinbase as individual tx"));

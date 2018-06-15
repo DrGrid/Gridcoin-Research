@@ -620,7 +620,7 @@ public:
     // Denial-of-service detection:
     mutable int nDoS;
     bool DoS(int nDoSIn, bool fIn) const { nDoS += nDoSIn; return fIn; }
-	std::string hashBoinc;
+    std::string hashBoinc;
 
     CTransaction()
     {

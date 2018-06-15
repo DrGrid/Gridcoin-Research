@@ -31,6 +31,7 @@ bool GenerateBeaconKeys(const std::string &cpid, std::string &sOutPubKey, std::s
 //!
 void StoreBeaconKeys(
         const std::string &cpid,
+
         const std::string &pubKey,
         const std::string &privKey);
 
@@ -66,5 +67,6 @@ int64_t BeaconTimeStamp(const std::string& cpid, bool bZeroOutAfterPOR);
 bool HasActiveBeacon(const std::string& cpid);
 
 bool VerifyBeaconContractTx(const CTransaction& tx);
+bool VerifyBeaconV2Tx(const Ctransaction& tx);
 
-bool CreateNewBeacon(std::vector<unsigned char> cpid);
+bool CreateNewBeacon(std::vector<unsigned char> beacon_data);

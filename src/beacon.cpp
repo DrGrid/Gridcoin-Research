@@ -218,16 +218,28 @@ bool VerifyBeaconContractTx(const CTransaction& tx)
     return true;
 }
 
-bool CreateNewBeacon(std::vector<unsigned char> cpid)
+bool VerifyBeaconV2Tx(const Ctransaction& tx)
 {
+    CScript beaconScript = tx.vout[0].scriptPubkey; 
+    //first check if script is OP_RETURN
+    return true;
+}
+
+bool CreateNewBeacon(std::vector<unsigned char> beacon_data)
+{
+    //std::string beacon_key;
+    //std::string projectID;
+    //std::string accountID;
     CScript scriptPubKey;
-    scriptPubKey = CScript() << OP_RETURN << cpid;
+    //The beacon script is OP_RETURN populated with the cpid and beacon_key
+    scriptPubKey = CScript() << OP_RETURN << beacon_data;
     CWalletTx wtx;
+    //currently this is just an arbitrary amount. 0.01GRC is well measured currently,
+    //however this should be corrected in future.
     int64_t nAmount = 0.01*COIN;
     std::string strError = pwalletMain->SendMoney(scriptPubKey, nAmount, wtx);
     if(!strError.empty())
         return false;
     return true;
 }
-
 
