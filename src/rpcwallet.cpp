@@ -2319,16 +2319,19 @@ UniValue createbeacon(const UniValue& params, bool fHelp)
                 "createbeacon <cpid> [hex string]\n"
                 "beacon key <pubkey> [hex string]\n"
                 "\n"
-                "Requires more than 0.00000001 GRC in wallet\n"
+                "Requires more than 0.01 GRC in wallet\n"
                 + HelpRequiringPassphrase());
 
     if (pwalletMain->IsLocked())
         throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Error: Please enter the wallet passphrase with wallatpassphrase first.");
     vector<unsigned char> cpid;
-    vector<unsigned char> beaconKey;
+    vector<unsigned char> beacon_key;
     if (params[0].get_str().size() > 0 && params[1].get_str().size() > 0)
-        data = ParseHex(params[0].get_str() + params[1].get_str());
-    bool result = CreateNewBeacon(data);
+    {
+        cpid = ParseHex(params[0].get_str());
+        beacon_key= ParseHex(params[1].get_str());
+    }
+    bool result = CreateNewBeacon(cpid, beacon_key);
     UniValue oResult(UniValue::VOBJ);
     oResult.pushKV("NewBeacon", result);
     return oResult;

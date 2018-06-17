@@ -6,6 +6,8 @@
 #include "appcache.h"
 #include "contract/contract.h"
 #include "wallet.h"
+#include "script.h"
+#include "main.h"
 #include "init.h" //for pwalletmain
 
 
@@ -218,21 +220,28 @@ bool VerifyBeaconContractTx(const CTransaction& tx)
     return true;
 }
 
-bool VerifyBeaconV2Tx(const Ctransaction& tx)
+bool VerifyBeaconV2Tx(const CTransaction& tx)
 {
-    CScript beaconScript = tx.vout[0].scriptPubkey; 
-    //first check if script is OP_RETURN
+    CScript beaconScript = tx.vout[0].scriptPubKey;
+    CScript::const_iterator pc = beaconScript.begin();
+    CScript::const_iterator pend = beaconScript.end();
+    valtype vchPushValue;
+    opcodetype OP_RETURN = OP_RETURN;
+    //first check if script is OP_RETURN (0x6a)
+    if (!beaconScript.GetOp(pc, OP_RETURN, beaconScript))
+        //Not a becaon tx
+        return true;
     return true;
 }
 
-bool CreateNewBeacon(std::vector<unsigned char> beacon_data)
+bool CreateNewBeacon(std::vector<unsigned char> cpid, std::vector<unsigned char> beacon_key)
 {
     //std::string beacon_key;
     //std::string projectID;
     //std::string accountID;
     CScript scriptPubKey;
     //The beacon script is OP_RETURN populated with the cpid and beacon_key
-    scriptPubKey = CScript() << OP_RETURN << beacon_data;
+    scriptPubKey = CScript() << OP_RETURN << cpid;
     CWalletTx wtx;
     //currently this is just an arbitrary amount. 0.01GRC is well measured currently,
     //however this should be corrected in future.
