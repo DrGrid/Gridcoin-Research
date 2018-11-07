@@ -316,7 +316,10 @@ AC_DEFUN([_BITCOIN_QT_IS_STATIC],[
   AC_CACHE_CHECK(for static Qt, bitcoin_cv_static_qt,[
     AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
         #include <QtCore/qconfig.h>
-        #ifndef QT_VERSION OR QT_VERSION_STR
+        #ifndef QT_VERSION
+        #  include <QtCore/qglobal.h>
+        #endif
+        #ifndef QT_VERSION_STR
         #  include <QtCore/qglobal.h>
         #endif
       ]],
@@ -446,7 +449,7 @@ AC_DEFUN([_BITCOIN_QT_FIND_LIBS_WITH_PKGCONFIG],[
         qt5_modules="$qt5_modules Qt5AxContainer Qt5AxServer Qt5AxBase"
     fi
     _BITCOIN_QT_IS_STATIC
-    if test x$bitcoin_cv_static_qt = xyes; then
+    if test "x$bitcoin_cv_static_qt" = xyes; then
       qt5_modules="$qt5_modules Qt5Svg"
     fi
     BITCOIN_QT_CHECK([
@@ -533,7 +536,7 @@ AC_DEFUN([_BITCOIN_QT_FIND_LIBS_WITHOUT_PKGCONFIG],[
     BITCOIN_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}AxServer],[main],,BITCOIN_QT_FAIL(lib${QT_LIB_PREFIX}AxServer not found)))
   fi
   _BITCOIN_QT_IS_STATIC
-  if test x$bitcoin_cv_static_qt = xyes; then
+  if test "x$bitcoin_cv_static_qt" = xyes; then
     BITCOIN_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}Svg],[main],,BITCOIN_QT_FAIL(lib${QT_LIB_PREFIX}Svg not found)))
   fi
 
